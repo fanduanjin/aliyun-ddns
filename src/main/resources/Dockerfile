@@ -1,4 +1,4 @@
-FROM java:8
+FROM openjdk:8
 RUN mkdir /usr/lib/aliyun-ddns -p
 WORKDIR /usr/lib/aliyun-ddns
 COPY ./aliyun-ddns.jar /usr/lib/aliyun-ddns/
