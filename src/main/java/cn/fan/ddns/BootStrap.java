@@ -49,7 +49,6 @@ public class BootStrap {
 
 
     public static void main(String[] args) {
-
         StaticLog.info(MSG_TEMPLATE, "启动阿里云动态域名");
         StaticLog.info(MSG_TEMPLATE, "运行方式 如 : java -jar aliyun-ddns.jar access=阿里云access secret=阿里云secret domain=域名");
         StaticLog.info(MSG_TEMPLATE);
