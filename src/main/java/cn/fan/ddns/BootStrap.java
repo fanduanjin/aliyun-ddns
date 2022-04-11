@@ -38,7 +38,6 @@ public class BootStrap {
      * 域名
      */
     public static String domain;
-
     /**
      * 记录类型
      */
