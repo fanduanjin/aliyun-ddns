@@ -1,6 +1,7 @@
 package cn.fan.ddns;
 
 import cn.hutool.Hutool;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.CronUtil;
@@ -56,7 +57,7 @@ public class BootStrap {
         // 支持秒级别定时任务
         CronUtil.setMatchSecond(true);
         CronUtil.start();
-        StaticLog.info(MSG_TEMPLATE, "域名工具启动成功 -_- " + cronStr);
+        StaticLog.info(MSG_TEMPLATE, "域名工具启动成功 =_= " + cronStr);
     }
 
 
@@ -128,18 +129,23 @@ public class BootStrap {
 
     }
 
-    static String getPublicIp() {
+    public static String getPublicIp() {
         String publicIp = null;
-        switch (ipVersion) {
-            case 4:
-                publicIp = HttpUtil.get("http://ip.3322.net");
-                StaticLog.info(MSG_TEMPLATE, "获取 4代IP : ");
-                break;
-            case 6:
-                publicIp = HttpUtil.get("https://ipv6.ipw.cn/api/ip/myip");
-                StaticLog.info(MSG_TEMPLATE, "获取 6代IP : ");
-                break;
-            default:
+        try {
+            switch (ipVersion) {
+                case 4:
+                    publicIp = HttpUtil.get("http://ip.3322.net");
+                    StaticLog.info(MSG_TEMPLATE, "获取 4代IP : "+publicIp);
+                    break;
+                case 6:
+                    publicIp = HttpUtil.get("https://ipv6.ipw.cn/api/ip/myip");
+                    StaticLog.info(MSG_TEMPLATE, "获取 6代IP : "+publicIp);
+                    break;
+                default:
+            }
+        } catch (Exception e) {
+            StaticLog.warn(e.getMessage());
+            return null;
         }
         return publicIp;
     }

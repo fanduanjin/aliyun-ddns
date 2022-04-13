@@ -6,6 +6,7 @@ import cn.hutool.log.StaticLog;
 import com.aliyun.alidns20150109.models.*;
 import org.bouncycastle.util.IPAddress;
 
+import java.sql.Struct;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,21 +19,15 @@ import java.util.List;
  * @Created by fanduanjin
  */
 public class DdnsTask implements Runnable {
-    private String localIp;
     private static final String MSG_RECORD_TEMPLATE = "记录类型[{}]  主机记录[{}]  记录值[{}]";
 
     @Override
     public void run() {
-        StaticLog.info(BootStrap.MSG_TEMPLATE, "原主机ip地址 : " + localIp);
-        String nowIp = BootStrap.getPublicIp();
-        StaticLog.info(BootStrap.MSG_TEMPLATE, "现在主机ip地址 : " + nowIp);
-        boolean isEquals = localIp != null && localIp.equals(nowIp);
-        localIp = nowIp;
-        if (isEquals) {
-            StaticLog.info(BootStrap.MSG_TEMPLATE, "原主机IP地址与现在主机IP地址一样 不需要更新IP");
+        String localIp = BootStrap.getPublicIp();
+        if (StrUtil.isEmpty(localIp)) {
+            StaticLog.warn(BootStrap.MSG_TEMPLATE, "警告 没有获取到本地ip");
             return;
         }
-        //IP不一样 更新域名解析
         List<DescribeDomainRecordsResponseBody.DescribeDomainRecordsResponseBodyDomainRecordsRecord> records =
                 describeDomainRecords();
         if (records == null || records.isEmpty()) {
