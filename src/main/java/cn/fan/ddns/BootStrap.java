@@ -10,9 +10,7 @@ import cn.hutool.cron.pattern.CronPatternUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.log.StaticLog;
 import com.aliyun.alidns20150109.Client;
-import com.aliyun.alidns20150109.models.DescribeDomainRecordsRequest;
-import com.aliyun.alidns20150109.models.DescribeDomainRecordsResponse;
-import com.aliyun.alidns20150109.models.DescribeDomainRecordsResponseBody;
+import com.aliyun.alidns20150109.models.*;
 import com.aliyun.teaopenapi.models.Config;
 
 import java.util.List;
@@ -43,6 +41,7 @@ public class BootStrap {
      * 记录类型
      */
     public static String recordType;
+    public static long ttl=300;
     private static String CONFIG_TEMPLATE = "---------------配置参数: access={} secret={} domain={} ipv={}";
     public static Client client;
     private static Config config;

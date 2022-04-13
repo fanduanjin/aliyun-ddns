@@ -19,7 +19,6 @@ import java.util.List;
  * @Created by fanduanjin
  */
 public class DdnsTask implements Runnable {
-    private static final String MSG_RECORD_TEMPLATE = "记录类型[{}]  主机记录[{}]  记录值[{}]";
 
     @Override
     public void run() {
@@ -29,57 +28,30 @@ public class DdnsTask implements Runnable {
             return;
         }
         List<DescribeDomainRecordsResponseBody.DescribeDomainRecordsResponseBodyDomainRecordsRecord> records =
-                describeDomainRecords();
+                DdnsUtil.describeDomainRecords();
         if (records == null || records.isEmpty()) {
             StaticLog.warn(BootStrap.MSG_TEMPLATE, "警告 没有获取到解析记录，或者云平台没有配置任何解析记录");
             return;
         }
-
+        long ttl = -2;
         for (DescribeDomainRecordsResponseBody.DescribeDomainRecordsResponseBodyDomainRecordsRecord record : records) {
             String value = record.getValue();
             if (value.equals(localIp)) {
                 return;
             }
+            if (ttl == -2) {
+                //ttl等于-2说明还没有获取过ttl 只获取一边就可以了
+                ttl = DdnsUtil.getInstanceTtl();
+            } else if (ttl == -1) {
+                //ttl等于-1 没有获取成功
+                return;
+            }
             String recordId = record.getRecordId();
             String rr = record.getRR();
-            updateDomainRecord(recordId, rr, localIp);
+            DdnsUtil.updateDomainRecord(recordId, rr, localIp, ttl);
         }
 
     }
 
-    List<DescribeDomainRecordsResponseBody.DescribeDomainRecordsResponseBodyDomainRecordsRecord> describeDomainRecords() {
-
-        DescribeDomainRecordsRequest request = new DescribeDomainRecordsRequest();
-        request.domainName = BootStrap.domain;
-        request.type = BootStrap.recordType;
-        try {
-            DescribeDomainRecordsResponse response = BootStrap.client.describeDomainRecords(request);
-            return response.getBody().domainRecords.record;
-        } catch (Exception e) {
-            StaticLog.warn(BootStrap.MSG_TEMPLATE, "获取阿里DNS 绑定信息失败 " + e.getMessage());
-            return null;
-        }
-    }
-
-    boolean updateDomainRecord(String recordId, String rr, String value) {
-        UpdateDomainRecordRequest updateDomainRecordRequest = new UpdateDomainRecordRequest();
-        updateDomainRecordRequest.recordId = recordId;
-        updateDomainRecordRequest.RR = rr;
-        updateDomainRecordRequest.type = BootStrap.recordType;
-        updateDomainRecordRequest.value = value;
-        try {
-            BootStrap.client.updateDomainRecord(updateDomainRecordRequest);
-            StaticLog.info(BootStrap.MSG_TEMPLATE, "修改DNS解析成功" + StrUtil.format(MSG_RECORD_TEMPLATE,
-                    BootStrap.recordType
-                    , rr,
-                    value));
-            return true;
-        } catch (Exception e) {
-            StaticLog.error(BootStrap.MSG_TEMPLATE, StrUtil.format(MSG_RECORD_TEMPLATE, BootStrap.recordType, rr,
-                    value));
-            StaticLog.error(BootStrap.MSG_TEMPLATE, "修改DNS解析记录失败 : " + e.getMessage());
-            return false;
-        }
-    }
 
 }
