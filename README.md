@@ -26,8 +26,8 @@
 docker run --name=aliyun-ddns --net=host -v /root/aliyun-ddns/dns.conf.json:/usr/local/aliyun-ddns/dns.conf.json --restart=always -d fanduanjin/aliyun-ddns
 ```
 #### 参数说明
-> --name 指定容器名称
-> --net=host 指定容器网络模式为host模式
-> -v 指定配置文件挂载路径
-> --restart=always 指定容器重启策略为始终重启
-> -d 指定容器运行在后台模式
+> --name 指定容器名称  
+> --net=host 指定容器网络模式为host模式  
+> -v 指定配置文件挂载路径  
+> --restart=always 指定容器重启策略为始终重启  
+> -d 指定容器运行在后台模式  
