@@ -28,3 +28,15 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    - name: 打印当前目录下文件
+      run: ll
+    - name: 创建Release
+      uses: softprops/action-gh-release@v2
+      with:
+          tag_name: ${{ env.VERSION }}
+          name: v${{ env.VERSION }}
+          draft: false
+          prerelease: false
+          files: |
+            ./chrome-extension.zip
+            ./serverless-template.zip
