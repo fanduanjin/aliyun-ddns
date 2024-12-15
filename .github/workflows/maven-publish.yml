@@ -26,10 +26,6 @@ jobs:
     - name: Maven打包
       run: mvn -B package --file pom.xml
 
-    - name: Build1
-      run: echo ${{ github.sha }} > Release.txt
-       
-
     - name: 创建Release
       uses: softprops/action-gh-release@v2
       with:
@@ -38,5 +34,4 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            Release.txt
-#            ./target/aliyun-ddns-1.0-SNAPSHOT-jar-with-dependencies.jar
+            ./target/aliyun-ddns-1.0-SNAPSHOT-jar-with-dependencies.jar
