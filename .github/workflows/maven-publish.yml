@@ -29,7 +29,7 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: 打印当前目录下文件
-      run: ll
+      run: pwd
     - name: 创建Release
       uses: softprops/action-gh-release@v2
       with:
